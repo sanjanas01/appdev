@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">vit</string>
+    <string name="enter_name">Enter name</string>
+    <string name="enter_password">Enter password</string>
 </resources>

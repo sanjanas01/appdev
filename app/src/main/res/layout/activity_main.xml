@@ -9,8 +9,8 @@
 
     <Button
         android:id="@+id/button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="100dp"
+        android:layout_height="50dp"
         android:layout_marginTop="44dp"
         android:textColor="@android:color/darker_gray"
         android:text="Login"
@@ -34,12 +34,12 @@
 
     <EditText
         android:id="@+id/editTextTextEmailAddress"
-        android:layout_width="wrap_content"
+        android:layout_width="@dimen/landing"
         android:layout_height="wrap_content"
         android:layout_marginTop="185dp"
         android:ems="10"
         android:textColor="@color/mycl"
-        android:hint="Enter name"
+        android:hint="@string/enter_name"
         android:inputType="textEmailAddress"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -47,11 +47,11 @@
 
     <EditText
         android:id="@+id/editTextTextPassword"
-        android:layout_width="wrap_content"
+        android:layout_width="@dimen/landing"
         android:layout_height="wrap_content"
         android:layout_marginStart="1dp"
         android:layout_marginTop="13dp"
-        android:hint="Enter password"
+        android:hint="@string/enter_password"
         android:textColor="@color/mycl"
         android:ems="10"
         android:inputType="numberPassword"
