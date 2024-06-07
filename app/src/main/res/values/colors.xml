@@ -2,4 +2,7 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="mycl">#01204E</color>
+    <color name="bg">#D1D8C5</color>
+    <color name="heading">#A91D3A</color>
 </resources>
