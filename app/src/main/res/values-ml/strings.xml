@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="enter_name">പേര് നൽകുക</string>
+    <string name="enter_password">പാസ്വേഡ് നല്കൂ</string>
+    <string name="app_name">vit</string>
+</resources>
