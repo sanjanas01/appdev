@@ -71,6 +71,12 @@ class MainActivity : AppCompatActivity() {
         sub(30,40)
     }
     /*
+    fun String.mynewmethod(values:String)
+    {
+        "add this to it"+values;
+    }
+
+
     fun clickMethod(view: View) {
         Log.i("MainActivity-click method", "Next page")
         //var dialIntent:Intent=Intent(Intent.ACTION_DIAL, Uri.parse("tel:+916369053568"))
