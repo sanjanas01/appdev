@@ -6,7 +6,7 @@ public class Demolambda {
         Msgimp mg=new Msgimp();
         mg.sendmsg();
 
-        Imsg mg1=()->{System.out.println("kjsefkj");};
+        Imsg mg1=()->{System.out.println("helloo");};
         mg1.sendmsg();
     }
 
