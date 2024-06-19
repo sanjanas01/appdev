@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="langs">
+        <item>Malayalam</item>
+        <item>Hindi</item>
+        <item>Tamil</item>
+        <item>Frnech</item>
+    </string-array>
+
+
+    <string-array name="fruits">
+        <item>mango</item>
+        <item>apple</item>
+        <item>Banana</item>
+    </string-array>
+</resources>

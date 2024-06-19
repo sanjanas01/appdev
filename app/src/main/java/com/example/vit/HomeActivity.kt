@@ -2,31 +2,53 @@ package com.example.vit
 
 import android.os.Bundle
 import android.util.Log
+import android.view.View
+import android.widget.AdapterView
+import android.widget.ListView
+import android.widget.Spinner
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.example.vit.network.MarsApi
+import com.example.vit.network.MarsApiService
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
-class HomeActivity : AppCompatActivity() {
+class HomeActivity : AppCompatActivity(){
+    var TAG = HomeActivity::class.java.simpleName    //"HomeActivity"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_home)
 
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-        //  if(intent.extras != null) {
-        var data = intent.extras?.getString("nkey")
-        Log.i("HomeActivity","data is = "+data)
-        val homeTextView:TextView = findViewById(R.id.tvHome)
-        homeTextView.setText(data)
-
 
 
     }
+
+
+    private fun getMarsPhotos() {
+        GlobalScope.launch {
+
+            var listMarsPhotos =   MarsApi.retrofitService.getPhotos()
+            //   var tvHome:TextView = findViewById(R.id.tvHome)
+//            tvHome.setText(listMarsPhotos.get(1).imgSrc)
+            Log.i("homeactiviy",listMarsPhotos.size.toString())
+            Log.i("homeactivity-url",listMarsPhotos.get(1).imgSrc)
+
+        }
+    }
+
+    fun getJson(view: View) {
+        getMarsPhotos()
+    }
+
 }
