@@ -37,7 +37,7 @@ class HomeActivity : AppCompatActivity(){
         marsAdapter = MarsAdapter(photos)
         marsRecyclerView.adapter = marsAdapter
 
-        // marsAdapter = MarsAdapter(photos)
+
 
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
@@ -57,7 +57,7 @@ class HomeActivity : AppCompatActivity(){
 
             marsAdapter.listMarsPhotos = listMarsPhotos
 
-            imageView.load(listMarsPhotos.get(0).imgSrc)
+            //imageView.load(listMarsPhotos.get(0).imgSrc)
             marsAdapter.notifyDataSetChanged()
 
             Log.i("homeactiviy",listMarsPhotos.size.toString())

@@ -4,18 +4,21 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import android.widget.ImageView
+import coil.load
 import androidx.recyclerview.widget.RecyclerView
 import com.example.vit.network.MarsPhoto
 
 class MarsAdapter(var listMarsPhotos: List<MarsPhoto>) :RecyclerView.Adapter<MarsAdapter.MarsViewHolder>() {
 
     class MarsViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
-        var textView:TextView = itemView.findViewById(android.R.id.text1)
+        var textView:TextView = itemView.findViewById(R.id.txt)
+        var marsImageView:ImageView = itemView.findViewById(R.id.im1)
 
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MarsViewHolder {
-        var rowPlank = LayoutInflater.from(parent.context).inflate(android.R.layout.simple_list_item_1,parent,false)
+        var rowPlank = LayoutInflater.from(parent.context).inflate(R.layout.row,parent,false)
         return  MarsViewHolder(rowPlank)
     }
 
@@ -24,7 +27,9 @@ class MarsAdapter(var listMarsPhotos: List<MarsPhoto>) :RecyclerView.Adapter<Mar
     }
 
     override fun onBindViewHolder(holder: MarsViewHolder, position: Int) {
-        holder.textView.setText(listMarsPhotos.get(position).imgSrc)
+        var url:String = listMarsPhotos.get(position).imgSrc
+        holder.textView.setText(url)
+        holder.marsImageView.load(url)
 
     }
 }
