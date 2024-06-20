@@ -1,9 +1,13 @@
 package com.example.vit.network
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import com.squareup.moshi.Json
 
-@Serializable
+
+
 data class MarsPhoto(
     val id: String,
-    @SerialName("img_src") val imgSrc: String
+    @Json(name = "img_src")
+    val imgSrc: String
+
 )

@@ -3,27 +3,42 @@ package com.example.vit
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.AdapterView
-import android.widget.ListView
-import android.widget.Spinner
-import android.widget.TextView
+import android.widget.ImageView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import coil.load
+import com.example.vit.network.MarsApi
+import com.example.vit.network.MarsPhoto
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import okhttp3.Dispatcher
 
-class HomeActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener,
-    AdapterView.OnItemClickListener {
+class HomeActivity : AppCompatActivity(){
     var TAG = HomeActivity::class.java.simpleName    //"HomeActivity"
-    lateinit var mySpinner: Spinner
-    lateinit var myListview:ListView
+
+    lateinit var marsRecyclerView:RecyclerView
+    lateinit var marsAdapter: MarsAdapter
+    lateinit var photos:List<MarsPhoto>
+    lateinit var imageView: ImageView
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_home)
-        mySpinner = findViewById(R.id.spinner) //taking handle
-        myListview = findViewById(R.id.listView)
-        myListview.isClickable = true
+        imageView = findViewById(R.id.imageView2)
+        marsRecyclerView = findViewById(R.id.recyclerViewUrls)
+        marsRecyclerView.layoutManager = LinearLayoutManager(this)
+        photos = ArrayList()
+        marsAdapter = MarsAdapter(photos)
+        marsRecyclerView.adapter = marsAdapter
+
+        // marsAdapter = MarsAdapter(photos)
+
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -31,28 +46,29 @@ class HomeActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener,
             insets
         }
 
-        mySpinner.onItemSelectedListener = this
-        myListview.setOnItemClickListener(this)
-        //get intent which sttarted this activity
-        //get the extras from that intent
-        //get the string with mykey
-        /*  var data = intent.extras?.getString("mykey")
-          Log.i("homeactivity",data.toString())
-          //put the data either in a log or on the textview
-          var homeTextView:TextView = findViewById(R.id.tvHome)
-          homeTextView.setText(data)*/
+
     }
 
-    override fun onItemSelected(adpater: AdapterView<*>?, view: View?, position: Int, id: Long) {
-        var item:String = adpater?.getItemAtPosition(position).toString()
-        Log.i(TAG, item )
+
+    private fun getMarsPhotos() {
+        GlobalScope.launch(Dispatchers.Main) {
+
+            var listMarsPhotos =   MarsApi.retrofitService.getPhotos()
+
+            marsAdapter.listMarsPhotos = listMarsPhotos
+
+            imageView.load(listMarsPhotos.get(0).imgSrc)
+            marsAdapter.notifyDataSetChanged()
+
+            Log.i("homeactiviy",listMarsPhotos.size.toString())
+            Log.i("url",listMarsPhotos.get(1).imgSrc)
+
+
+        }
     }
 
-    override fun onNothingSelected(parent: AdapterView<*>?) {
-        TODO("Not yet implemented")
+    fun getJson(view: View) {
+        getMarsPhotos()
     }
 
-    override fun onItemClick(adpater: AdapterView<*>?, view: View?, position: Int, id: Long) {
-        var item:String = adpater?.getItemAtPosition(position).toString()
-        Log.i(TAG, item )    }
 }
