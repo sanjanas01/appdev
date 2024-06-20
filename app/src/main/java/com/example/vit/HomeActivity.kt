@@ -1,35 +1,55 @@
 package com.example.vit
-
-import CustomAdapter
 import android.os.Bundle
-
-
+import android.view.View
+import android.widget.ProgressBar
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.vit.network.Item
-
+import com.example.vit.network.PhotoAdapter
+import com.example.vit.network.RetrofitInstance
+import kotlinx.coroutines.launch
+import retrofit2.HttpException
+import java.io.IOException
 
 class HomeActivity : AppCompatActivity() {
 
     private lateinit var recyclerView: RecyclerView
-    private lateinit var customAdapter: CustomAdapter
-    private lateinit var itemList: MutableList<Item>
+    private lateinit var photoAdapter: PhotoAdapter
+    private lateinit var progressBar: ProgressBar
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         recyclerView = findViewById(R.id.recycler_view)
+        progressBar = findViewById(R.id.progress_bar)
+
         recyclerView.layoutManager = LinearLayoutManager(this)
+        photoAdapter = PhotoAdapter(this, listOf())
+        recyclerView.adapter = photoAdapter
 
-        itemList = mutableListOf()
-        // Add sample data
-        itemList.add(Item("https://t3.ftcdn.net/jpg/05/58/14/66/360_F_558146635_Pjgj1F8Au64JTeB9VGuas0Fm09OhEOGh.jpg", false))
-        itemList.add(Item("https://butterry.com/image/cache/catalog/buttery/sq-choco-vanilla-cake0006chva-AA-1000x1000.jpg", true))
-        // Add more items as needed
+        fetchPhotos()
+    }
 
-        customAdapter = CustomAdapter(this, itemList)
-        recyclerView.adapter = customAdapter
+    private fun fetchPhotos() {
+        progressBar.visibility = View.VISIBLE
+        recyclerView.visibility = View.GONE
+
+        lifecycleScope.launch {
+            try {
+                val photos = RetrofitInstance.api.getPhotos()
+                photoAdapter.updatePhotos(photos)
+                progressBar.visibility = View.GONE
+                recyclerView.visibility = View.VISIBLE
+            } catch (e: IOException) {
+                progressBar.visibility = View.GONE
+                Toast.makeText(this@HomeActivity, "Network error: ${e.message}", Toast.LENGTH_SHORT).show()
+            } catch (e: HttpException) {
+                progressBar.visibility = View.GONE
+                Toast.makeText(this@HomeActivity, "Server error: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 }
