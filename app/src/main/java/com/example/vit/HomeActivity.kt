@@ -1,76 +1,36 @@
 package com.example.vit
 
 import android.os.Bundle
-import android.util.Log
-import android.view.View
-import android.widget.ImageView
-import android.widget.TextView
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.vit.database.Item
+import com.example.vit.database.ItemDAO
+import com.example.vit.database.Itemroomdb
 import com.example.vit.databinding.ActivityHomeBinding
-import com.example.vit.network.MarsApi
-import com.example.vit.network.MarsPhoto
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import androidx.databinding.DataBindingUtil
 
+class HomeActivity : AppCompatActivity() {
 
-class HomeActivity : AppCompatActivity(){
-    var TAG = HomeActivity::class.java.simpleName
     private lateinit var binding: ActivityHomeBinding
-
-    val photoMarsDatabinding = MarsPhoto("007","moonimage.com")
-
-    lateinit var marsAdapter: MarsAdapter
-    lateinit var photos:List<MarsPhoto>
-
+    private lateinit var dao: ItemDAO
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        val binding: ActivityHomeBinding = DataBindingUtil.setContentView(this, R.layout.activity_home)
-        binding.marsphotoxml=photoMarsDatabinding
+        binding = ActivityHomeBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        binding.recyclerViewUrls.layoutManager = LinearLayoutManager(this)
-        photos = ArrayList()
-        marsAdapter = MarsAdapter(photos)
-        binding.recyclerViewUrls.adapter = marsAdapter
+        val database = Itemroomdb.getDatabase(this)
+        dao = database.itemDao()
 
-
-
-
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
-        }
-
-
-    }
-
-
-    private fun getMarsPhotos() {
-        GlobalScope.launch(Dispatchers.Main) {
-
-            var listMarsPhotos =   MarsApi.retrofitService.getPhotos()
-
-            marsAdapter.listMarsPhotos = listMarsPhotos
-
-            marsAdapter.notifyDataSetChanged()
-
-            Log.i("homeactiviy",listMarsPhotos.size.toString())
-            Log.i("URL",listMarsPhotos.get(1).imgSrc)
-
-
+        binding.btnDbInsert.setOnClickListener {
+            insertDataDb()
         }
     }
 
-    fun getJson(view: View) {
-        getMarsPhotos()
+    private fun insertDataDb() {
+        GlobalScope.launch {
+            val item = Item(name = "dosa", price = 99.99, quantity = 2)
+            dao.insert(item)
+        }
     }
-
 }
