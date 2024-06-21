@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -15,11 +16,15 @@ import com.example.vit.network.MarsPhoto
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import androidx.databinding.DataBindingUtil
+
 
 class HomeActivity : AppCompatActivity(){
     var TAG = HomeActivity::class.java.simpleName
-
     private lateinit var binding: ActivityHomeBinding
+
+    val photoMarsDatabinding = MarsPhoto("007","moonimage.com")
+
     lateinit var marsAdapter: MarsAdapter
     lateinit var photos:List<MarsPhoto>
 
@@ -27,9 +32,8 @@ class HomeActivity : AppCompatActivity(){
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        binding = ActivityHomeBinding.inflate(layoutInflater)
-        val view = binding.root
-        setContentView(view)
+        val binding: ActivityHomeBinding = DataBindingUtil.setContentView(this, R.layout.activity_home)
+        binding.marsphotoxml=photoMarsDatabinding
 
         binding.recyclerViewUrls.layoutManager = LinearLayoutManager(this)
         photos = ArrayList()
