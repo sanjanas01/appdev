@@ -1,55 +1,72 @@
 package com.example.vit
+
 import android.os.Bundle
+import android.util.Log
 import android.view.View
-import android.widget.ProgressBar
-import android.widget.Toast
+import android.widget.ImageView
+import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.lifecycleScope
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.example.vit.network.PhotoAdapter
-import com.example.vit.network.RetrofitInstance
+import com.example.vit.databinding.ActivityHomeBinding
+import com.example.vit.network.MarsApi
+import com.example.vit.network.MarsPhoto
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import retrofit2.HttpException
-import java.io.IOException
 
-class HomeActivity : AppCompatActivity() {
+class HomeActivity : AppCompatActivity(){
+    var TAG = HomeActivity::class.java.simpleName
 
-    private lateinit var recyclerView: RecyclerView
-    private lateinit var photoAdapter: PhotoAdapter
-    private lateinit var progressBar: ProgressBar
+    private lateinit var binding: ActivityHomeBinding
+    lateinit var marsAdapter: MarsAdapter
+    lateinit var photos:List<MarsPhoto>
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        enableEdgeToEdge()
+        binding = ActivityHomeBinding.inflate(layoutInflater)
+        val view = binding.root
+        setContentView(view)
 
-        recyclerView = findViewById(R.id.recycler_view)
-        progressBar = findViewById(R.id.progress_bar)
+        binding.recyclerViewUrls.layoutManager = LinearLayoutManager(this)
+        photos = ArrayList()
+        marsAdapter = MarsAdapter(photos)
+        binding.recyclerViewUrls.adapter = marsAdapter
 
-        recyclerView.layoutManager = LinearLayoutManager(this)
-        photoAdapter = PhotoAdapter(this, listOf())
-        recyclerView.adapter = photoAdapter
 
-        fetchPhotos()
+
+
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+            insets
+        }
+
+
     }
 
-    private fun fetchPhotos() {
-        progressBar.visibility = View.VISIBLE
-        recyclerView.visibility = View.GONE
 
-        lifecycleScope.launch {
-            try {
-                val photos = RetrofitInstance.api.getPhotos()
-                photoAdapter.updatePhotos(photos)
-                progressBar.visibility = View.GONE
-                recyclerView.visibility = View.VISIBLE
-            } catch (e: IOException) {
-                progressBar.visibility = View.GONE
-                Toast.makeText(this@HomeActivity, "Network error: ${e.message}", Toast.LENGTH_SHORT).show()
-            } catch (e: HttpException) {
-                progressBar.visibility = View.GONE
-                Toast.makeText(this@HomeActivity, "Server error: ${e.message}", Toast.LENGTH_SHORT).show()
-            }
+    private fun getMarsPhotos() {
+        GlobalScope.launch(Dispatchers.Main) {
+
+            var listMarsPhotos =   MarsApi.retrofitService.getPhotos()
+
+            marsAdapter.listMarsPhotos = listMarsPhotos
+
+            marsAdapter.notifyDataSetChanged()
+
+            Log.i("homeactiviy",listMarsPhotos.size.toString())
+            Log.i("URL",listMarsPhotos.get(1).imgSrc)
+
+
         }
     }
+
+    fun getJson(view: View) {
+        getMarsPhotos()
+    }
+
 }
