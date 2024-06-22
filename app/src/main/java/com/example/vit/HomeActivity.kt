@@ -2,62 +2,65 @@ package com.example.vit
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
+import com.example.vit.HomeViewModel
 import com.example.vit.database.Item
 import com.example.vit.database.ItemDAO
 import com.example.vit.database.Itemroomdb
 import com.example.vit.databinding.ActivityHomeBinding
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.last
-import kotlinx.coroutines.flow.single
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.last
-import kotlinx.coroutines.flow.single
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 
 class HomeActivity : AppCompatActivity() {
-
+    var TAG = HomeActivity::class.java.simpleName    //"HomeActivity"
     private lateinit var binding: ActivityHomeBinding
-    private lateinit var dao: ItemDAO
-
+    lateinit var dao: ItemDAO
+    lateinit var viewModel: HomeViewModel
+    //var count = 0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityHomeBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-
-        val database = Itemroomdb.getDatabase(this)
+        val view = binding.root
+        setContentView(view)
+        var  database = Itemroomdb.getDatabase(this)
         dao = database.itemDao()
-
-        binding.insert.setOnClickListener {
-            insert1()
+        viewModel = ViewModelProvider(this)[HomeViewModel::class.java]
+        //binding.tvHome.setText(""+count)
+        binding.tvHome.setText(""+viewModel.count)
+        binding.insert.setOnClickListener{
+            insertDataDb()
         }
-
-        binding.view.setOnClickListener {
-            view(2)
+        binding.view.setOnClickListener{
+            findItemDb(21)
+        }
+        binding.inc.setOnClickListener{
+//            count++
+//            viewModel.incrementCount()
+//            binding.tvHome.setText(""+count)
+//            +viewModel.count)
+            viewModel.incrementCount()
+            binding.tvHome.setText(""+viewModel.count)
         }
     }
 
-    private fun insert1() {
+    fun add(a:Int,b:Int):Int{
+        return a+b
+    }
+
+    private fun findItemDb(id: Int) {
+        GlobalScope.launch(Dispatchers.Main) {
+            var item = dao.getItem(id).first()
+            binding.tvHome.setText(item.name)
+        }
+    }
+
+    private fun insertDataDb() {
         GlobalScope.launch {
-            val item = Item(name = "dosa", price = 99.99, quantity = 2)
+            var item = Item(19,"apple",29.38,3)
             dao.insert(item)
         }
     }
-
-    private fun view(id: Int) {
-        GlobalScope.launch(Dispatchers.Main) {
-            val item = dao.getItem(id).firstOrNull() // Use firstOrNull() to handle null case
-            if (item != null) {
-                binding.tvHome.text = item.name
-            } else {
-                // Handle case where item with the given ID is not found
-                binding.tvHome.text = "Item not found"
-            }
-        }
-    }
-
 
 }
