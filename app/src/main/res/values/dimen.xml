@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="landing">300dp</dimen>
+    <dimen name="myedittextwidth">300dp</dimen>
+    <dimen name="min_height">48dp</dimen>
+
+
 </resources>
