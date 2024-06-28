@@ -5,4 +5,7 @@
     <color name="mycl">#01204E</color>
     <color name="bg">#D1D8C5</color>
     <color name="heading">#A91D3A</color>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
 </resources>

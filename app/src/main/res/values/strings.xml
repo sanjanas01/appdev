@@ -2,4 +2,6 @@
     <string name="app_name">vit</string>
     <string name="enter_name">Enter name</string>
     <string name="enter_password">Enter password</string>
+    <string name="hint_word" >Enter a word</string>
+    <string name="button_save">Save</string>
 </resources>
